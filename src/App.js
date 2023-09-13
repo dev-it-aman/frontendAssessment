@@ -1,5 +1,5 @@
 import './App.css';
-import JobCard from './JobCard';
+import JobCard from './Components/JobCard';
 
 function App() {
   return (
