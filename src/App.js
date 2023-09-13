@@ -1,11 +1,9 @@
 import './App.css';
-import JobCard from './Components/JobCard';
+import JobCardContainer from './Components/JobCardContainer';
 
 function App() {
   return (
-    <div className="App">
-       <JobCard/>
-    </div>
+       <JobCardContainer/>
   );
 }
 
