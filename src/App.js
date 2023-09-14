@@ -1,11 +1,11 @@
 import './App.css';
 import { Toaster } from 'react-hot-toast';
 import JobCardContainer from './Components/JobCardContainer';
+import JobForm from './Components/JobForm';
 
 function App() {
   return (
        <>
-          <div>
             <Toaster position='top-center' toastOptions={{
               success: {
                 theme: {
@@ -15,8 +15,7 @@ function App() {
             }
             }>
             </Toaster>
-          </div>
-         <JobCardContainer/>
+         <JobForm/>
        </>
   );
 }
