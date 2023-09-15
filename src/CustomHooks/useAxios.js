@@ -13,9 +13,9 @@ const useAxios = () =>{
             const response = await axios.request(requestConfig.url, {
                 method: requestConfig.method ?  requestConfig.method : 'GET',
                 headers: requestConfig.headers ? requestConfig.headers : {},
-                body: requestConfig.body ? JSON.stringify(requestConfig.body) : null, 
+                data: requestConfig.data ? requestConfig.data : null, 
             });
-
+            console.log(requestConfig)
             console.log(response.status);
             toast.dismiss(loadingToast.id)
             if(response.status===200){
