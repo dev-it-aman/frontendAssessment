@@ -15,7 +15,7 @@ function App() {
             }
             }>
             </Toaster>
-         <JobForm/>
+         <JobCardContainer/>
        </>
   );
 }
