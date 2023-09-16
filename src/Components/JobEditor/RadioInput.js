@@ -9,11 +9,11 @@ const RadioInput = () => {
             <div className="flex h-9 py-2 items-center gap-4">
                 <div className='flex gap-1'>
                      <input type="radio"></input>
-                     <label className='text-neutral-500 text-sm font-normal leading-tight'>Quick apply</label>
+                     <label className='text-neutral-500 text-sm font-normal leading-tight' >Quick apply</label>
                 </div>
                 <div className='flex gap-1'>
                     <input type='radio'></input>
-                    <label className='text-neutral-500 text-sm font-normal leading-tight'>External apply</label>
+                    <label className='text-neutral-500 text-sm font-normal leading-tight' >External apply</label>
                 </div>
             </div>
         </div>

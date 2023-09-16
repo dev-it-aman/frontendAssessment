@@ -15,16 +15,10 @@ const useAxios = () =>{
                 headers: requestConfig.headers ? requestConfig.headers : {},
                 data: requestConfig.data ? requestConfig.data : null, 
             });
-            console.log(requestConfig)
-            console.log(response.status);
             toast.dismiss(loadingToast.id)
-            if(response.status===200){
-                console.log(response.status);
-            }
-
+        
             const data = await response.data;
             toast.success(`${searchField} Fetched Successfully!!`);
-             
             applyData(data);
         }catch (err){
             toast.dismiss(loadingToast.id);

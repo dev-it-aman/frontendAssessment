@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactDOM  from 'react-dom';
 import InputField from './JobEditor/InputField';
 import RadioInput from './JobEditor/RadioInput';
 import useAxios from '../CustomHooks/useAxios';
 
-const JobForm = ({jobOpeningData}) => {
+const JobForm = ({jobOpeningData, editOpeningPosted, createOpeningPosted, closeJobForm}) => {
     const [step,setStep] = useState(1);
     const initialJobOpeningData = jobOpeningData ? jobOpeningData  : {
         "id":500,
@@ -23,7 +24,11 @@ const JobForm = ({jobOpeningData}) => {
         "totalEmployee":0,
         "applyType":"",
     }
+    console.log(initialJobOpeningData);
     const [openingData, setOpeningData]= useState(initialJobOpeningData);
+    useEffect(()=>{
+        setOpeningData(initialJobOpeningData);
+    },[jobOpeningData]);
     const { sendRequest: uploadOpeningData } = useAxios(); 
 
     const openingButtonClickHandler = (event) =>{
@@ -32,17 +37,21 @@ const JobForm = ({jobOpeningData}) => {
             setStep(step+1);
         }else{
             setStep(1);
-            console.log(typeof openingData.totalEmployee);
-            console.log(openingData);
-             
             const url = '/openings' + (jobOpeningData ? `/${openingData.id}` : '');
             uploadOpeningData({
                 method:jobOpeningData?'PUT':'POST',
                 url,
                 headers:{'content-type':'application/json'},
                 data:openingData,
-            },(data)=> console.log(data),
-            "Data posted")
+            },(data)=> { 
+                if(jobOpeningData){
+                    editOpeningPosted(data);
+                }else{
+                    createOpeningPosted(data);
+                };
+                setOpeningData();
+            },
+            "Data posted") 
         }
     }
 
@@ -89,12 +98,14 @@ const JobForm = ({jobOpeningData}) => {
                 <InputField placeholder="Maximum" name="salary.maximum" value={openingData.salary.maximum} onChange={inputChangeHandler}/>
             </div>
             <InputField labelText="Total Employee" placeholder="ex. 100" name="totalEmployee" value={openingData.totalEmployee} onChange={inputChangeHandler}/>
-            <RadioInput />
+            <RadioInput name="applyType" value={openingData.applyType}/>
         </>
     );
 
-    return (
-        <div className="w-[579px] h-[566px] p-8 bg-white rounded-[10px] border border-neutral-200 flex-col justify-between items-center gap-8 inline-flex">  
+    return ReactDOM.createPortal(
+        <>
+<div className="fixed inset-0 bg-gray-400 bg-opacity-90" onClick={closeJobForm}></div>
+        <div className=" fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[579px] h-[566px] p-8 bg-white rounded-[10px] border border-neutral-200 flex-col justify-between items-center gap-8 inline-flex">  
             <div className="w-[513px] h-[364px] flex-col justify-start items-start gap-6 inline-flex">
                 <div className="w-[513px] justify-between items-center gap-2 inline-flex">
                     <div className="text-zinc-900 text-xl font-normal leading-7">Create a job</div>
@@ -107,6 +118,8 @@ const JobForm = ({jobOpeningData}) => {
                 <button className=" bg-sky-500 rounded-md shadow text-base font-medium leading-normal flex p-2 justify-center items-center" onClick={openingButtonClickHandler}>{step===1 && "Next" }{step!==1 && "Save"}</button>
             </div>
         </div>
+        </>
+        , document.querySelector(".JobForm")
     )
 }
 
