@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM  from 'react-dom';
 import InputField from './JobEditor/InputField';
 import RadioInput from './JobEditor/RadioInput';
+import useInput from '../CustomHooks/useInput';
 import useAxios from '../CustomHooks/useAxios';
+import { toast } from 'react-hot-toast';
 
 const JobForm = ({jobOpeningData, editOpeningPosted, createOpeningPosted, closeJobForm}) => {
     const [step,setStep] = useState(1);
     const initialJobOpeningData = jobOpeningData ? jobOpeningData  : {
-        "id":500,
+        "id":'',
         "jobTitle":'',
         "companyName":'',
         "industry":'',
@@ -23,37 +25,41 @@ const JobForm = ({jobOpeningData, editOpeningPosted, createOpeningPosted, closeJ
         },
         "totalEmployee":0,
         "applyType":"",
-    }
-    console.log(initialJobOpeningData);
+    };
+
     const [openingData, setOpeningData]= useState(initialJobOpeningData);
+    const {
+        value: jobTitle,
+        isValid: jobTitleIsValid,
+        hasError: jobTitleError,
+        inputChangeHandler: jobTitleChangeHandler,
+        inputBlurHandler: jobTitleBlurHandler,
+        reset: resetjobTitleInput
+   } = useInput( openingData.jobTitle , value => value.trim()!== "" );
+
+   const {
+    value: companyName,
+    isValid: companyNameIsValid,
+    hasError: companyNameHasError,
+    inputChangeHandler: companyNameChangeHandler,
+    inputBlurHandler: companyNameBlurHandler,
+    reset: resetCompanyNameInput
+} = useInput( openingData.companyName , value => value.trim()!== "" );
+
+const {
+    value: industry,
+    isValid: industryIsValid,
+    hasError: industryHasError,
+    inputChangeHandler: industryChangeHandler,
+    inputBlurHandler: industryBlurHandler,
+    reset: resetIndustryInput
+} = useInput( openingData.industry , value => value.trim()!== "" );
+
     useEffect(()=>{
         setOpeningData(initialJobOpeningData);
     },[jobOpeningData]);
-    const { sendRequest: uploadOpeningData } = useAxios(); 
 
-    const openingButtonClickHandler = (event) =>{
-        event.preventDefault();
-        if(step===1){
-            setStep(step+1);
-        }else{
-            setStep(1);
-            const url = '/openings' + (jobOpeningData ? `/${openingData.id}` : '');
-            uploadOpeningData({
-                method:jobOpeningData?'PUT':'POST',
-                url,
-                headers:{'content-type':'application/json'},
-                data:openingData,
-            },(data)=> { 
-                if(jobOpeningData){
-                    editOpeningPosted(data);
-                }else{
-                    createOpeningPosted(data);
-                };
-                setOpeningData();
-            },
-            "Data posted") 
-        }
-    }
+    const { sendRequest: uploadOpeningData } = useAxios(); 
 
     const inputChangeHandler = (event) => {
         const { name, value} = event.target;
@@ -75,13 +81,54 @@ const JobForm = ({jobOpeningData, editOpeningPosted, createOpeningPosted, closeJ
           }
     }
 
+    const openingButtonClickHandler = (event) =>{
+        event.preventDefault();
+        if(step===1){
+            jobTitleBlurHandler();
+            companyNameBlurHandler();
+            industryBlurHandler();
+            if(jobTitleIsValid &&
+                companyNameIsValid && 
+                industryIsValid){
+                    setOpeningData({
+                        ...openingData,
+                        "jobTitle": jobTitle,
+                        "industry": industry,
+                        "companyName": companyName
+                      });
+                    setStep(step+1);
+                    resetIndustryInput();
+                    resetCompanyNameInput();
+                    resetjobTitleInput();
+                }else{
+                    toast.error("Fill all the necessary Fields");
+                }
+        }else{
+            const url = '/openings' + (jobOpeningData ? `/${openingData.id}` : '');
+            uploadOpeningData({
+                method:jobOpeningData?'PUT':'POST',
+                url,
+                headers:{'content-type':'application/json'},
+                data:openingData,
+            },(data)=> { 
+                if(jobOpeningData){
+                    editOpeningPosted(data);
+                }else{
+                    createOpeningPosted(data);
+                };
+                setOpeningData();
+            },
+            jobOpeningData ? "Opening Edited" : "Opening Created") 
+        }
+    }
+
     const step1Content = (
         <>
-            <InputField labelText="Job title" placeholder="ex. UX UI Designer" name="jobTitle" value={openingData.jobTitle} onChange={inputChangeHandler}/>
-            <InputField labelText="Company name" placeholder="ex. Google" name="companyName" value={openingData.companyName} onChange={inputChangeHandler}/>
-            <InputField labelText="Industry" placeholder="ex. Information technology" name="industry" value={openingData.industry} onChange={inputChangeHandler}/>
+            <InputField labelText="Job title" placeholder="ex. UX UI Designer" name="jobTitle" value={jobTitle} onChange={jobTitleChangeHandler} onBlur={jobTitleBlurHandler} IsValid={jobTitleIsValid} hasError={jobTitleError} isMandatory="mandatory"/>
+            <InputField labelText="Company name" placeholder="ex. Google" name="companyName" value={companyName} onChange={companyNameChangeHandler} onBlur={companyNameBlurHandler} IsValid={companyNameIsValid} hasError={companyNameHasError} isMandatory="mandatory"/>
+            <InputField labelText="Industry" placeholder="ex. Information technology" name="industry" value={industry} onChange={industryChangeHandler} onBlur={industryBlurHandler} IsValid={industryIsValid} hasError={industryHasError} isMandatory="mandatory"/>
             <div className="max-w-[513px] flex gap-6">
-                <InputField labelText="Location" placeholder="ex. Chennai" name="location" value={openingData.location} onChange={inputChangeHandler}/>
+                <InputField labelText="Location" placeholder="ex. Chennai" name="location" value={openingData.location} onChange={inputChangeHandler} />
                 <InputField labelText="Remote type" placeholder="ex. In-office" name="remoteType" value={openingData.remoteType} onChange={inputChangeHandler}/>
             </div>
         </>

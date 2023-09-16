@@ -6,7 +6,6 @@ import JobForm from './Components/JobForm';
 import NavBar from './Components/NavBar/NavBar';
 import useAxios from './CustomHooks/useAxios';
 
-
 function App() {
   const [openings, setOpenings] = useState([]);
   const [showForm, setShowForm] = useState(0);
@@ -19,7 +18,7 @@ function App() {
 
     fetchOpeningsRequest( { url },
     data=>{  setOpenings(data); console.log(data)},
-    "Openings");
+    "Openings Fetched");
    },[]);
 
    const editOpening = (openingData) => {
@@ -53,7 +52,7 @@ function App() {
           url,
           method:'DELETE',
       },(data)=>console.log(data),
-      "JobId")
+      "Opening Deleted")
 
       setOpenings(openings.filter(opening=> opening.id !== id));
    }

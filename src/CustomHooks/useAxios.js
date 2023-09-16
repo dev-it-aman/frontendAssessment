@@ -18,7 +18,7 @@ const useAxios = () =>{
             toast.dismiss(loadingToast.id)
         
             const data = await response.data;
-            toast.success(`${searchField} Fetched Successfully!!`);
+            toast.success(`${searchField} Successfully!!`);
             applyData(data);
         }catch (err){
             toast.dismiss(loadingToast.id);

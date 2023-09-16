@@ -1,6 +1,6 @@
 import React from 'react';
 import JobCard from './JobCard';
-const JobCardContainer = ({openings, opening ,deleteHandler, editHandler}) => {
+const JobCardContainer = ({openings, deleteHandler, editHandler}) => {
     console.log(openings);
     const jobOpeningEditHandler = (jobOpeningData) => {
         editHandler(jobOpeningData);
