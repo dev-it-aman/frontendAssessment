@@ -1,6 +1,7 @@
 import React from 'react';
 
 const NavBar = ({createOpeningHandler}) => {
+    
     const createJobHandler = (event) => {
         event.preventDefault();
         createOpeningHandler();

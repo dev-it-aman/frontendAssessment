@@ -15,13 +15,13 @@ const JobCardContainer = ({openings, deleteHandler, editHandler}) => {
         <div className="w-[100%] pl-[85px] pr-[44.88px] pt-[30px] pb-[30px] bg-zinc-300 items-start gap-[83.12px] flex flex-wrap">
            {openings.map((opening) =>
             {
-            return (
+                return (
                    <JobCard key={opening.id}
                     openingData={opening} 
                     deleteHandler={jobOpeningDeleteHandler} 
                     editHandler={jobOpeningEditHandler}/>
-            )
-           })}
+                )
+            })}
         </div>
     )
 };

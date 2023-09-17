@@ -64,7 +64,7 @@ const {
     const inputChangeHandler = (event) => {
         const { name, value} = event.target;
         const [fieldName, subField]= name.split('.');
-
+        console.log(value);
         if (subField) {
             setOpeningData(prevFormData => ({
               ...prevFormData,
@@ -79,6 +79,11 @@ const {
               [fieldName]: value,
             });
           }
+    }
+
+    const radioChangeHandler = (selectedOption) => {
+         setOpeningData({...openingData, 
+            "applyType": selectedOption})
     }
 
     const openingButtonClickHandler = (event) =>{
@@ -145,7 +150,7 @@ const {
                 <InputField placeholder="Maximum" name="salary.maximum" value={openingData.salary.maximum} onChange={inputChangeHandler}/>
             </div>
             <InputField labelText="Total Employee" placeholder="ex. 100" name="totalEmployee" value={openingData.totalEmployee} onChange={inputChangeHandler}/>
-            <RadioInput name="applyType" value={openingData.applyType}/>
+            <RadioInput name="applyType" value={openingData.applyType} radioButtonChange={radioChangeHandler}/>
         </>
     );
 

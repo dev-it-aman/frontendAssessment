@@ -40,7 +40,10 @@ const JobCard = ({openingData, deleteHandler, editHandler}) => {
                                 {openingData.totalEmployee} employees
                             </div>
                          </div>
-                             <button className="w-[118px] h-10 justify-start items-start inline-flex text-white px-4 py-2 bg-sky-500 rounded-md shadow text-base font-medium leading-normal">Apply Now</button>
+                         <div className='flex gap-6'>
+                           {openingData.applyType === "Quick apply" &&  <button className="w-[118px] h-10 justify-center items-center inline-flex text-white px-4 py-2 bg-sky-500 rounded-md shadow text-base font-medium leading-normal">Apply Now</button>}
+                           {openingData.applyType === "External apply" && <button className='flex h-10 p-2 items-center gap-2 rounded border border-blue-500 bg-white'>External Apply</button>}
+                         </div>
                     </div>
             </div>
             <div className=" items-start w-32 h-14 gap-2 flex justify-end ">

@@ -8,7 +8,7 @@ import useAxios from './CustomHooks/useAxios';
 
 function App() {
   const [openings, setOpenings] = useState([]);
-  const [showForm, setShowForm] = useState(0);
+  const [showForm, setShowForm] = useState(false);
   const [jobOpeningDataEdit,setJobOpeningDataEdit] = useState();
   const { sendRequest: fetchOpeningsRequest } = useAxios();
   const { sendRequest: deleteOpeningRequest } = useAxios();
@@ -23,27 +23,27 @@ function App() {
 
    const editOpening = (openingData) => {
         setJobOpeningDataEdit(openingData);
-        setShowForm(showForm+1);
+        setShowForm(true);
    }
 
    const createOpening = () => {
          setJobOpeningDataEdit();
-         setShowForm(showForm+1);
+         setShowForm(true);
    }
 
    const onEditDoneHandler = (editedOpening) => {
-        setShowForm(0);
+        setShowForm(false);
         setJobOpeningDataEdit();
         setOpenings( openings.map(opening => opening.id === editedOpening.id ? editedOpening : opening));
    }
 
    const onOpeningCreatedHandler = (newOpeningData) => {
-        setShowForm(0);
+        setShowForm(false);
         setOpenings([...openings,newOpeningData]);
    }
 
    const closeFormHandler =() => {
-    setShowForm(0);
+    setShowForm(false);
    }
 
    const deleteOpening = (id) => {
@@ -70,7 +70,11 @@ function App() {
             </Toaster>
              <NavBar createOpeningHandler={createOpening}/>
              <JobCardContainer openings={openings} deleteHandler={deleteOpening} editHandler={editOpening}/> 
-           {showForm>0 && <JobForm closeJobForm={closeFormHandler} jobOpeningData={jobOpeningDataEdit} editOpeningPosted={onEditDoneHandler} createOpeningPosted={onOpeningCreatedHandler}/>}
+           {showForm>0 && <JobForm 
+                              closeJobForm={closeFormHandler} 
+                              jobOpeningData={jobOpeningDataEdit} 
+                              editOpeningPosted={onEditDoneHandler} 
+                              createOpeningPosted={onOpeningCreatedHandler}/>}
        </>
   );
 }
